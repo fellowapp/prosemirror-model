@@ -338,9 +338,16 @@ export class Node {
   // Return a JSON-serializeable representation of this node.
   toJSON() {
     let obj = {type: this.type.name}
-    for (let _ in this.attrs) {
-      obj.attrs = this.attrs
-      break
+    let attrs = {}
+    let modified = false
+    for (let key in this.attrs) {
+      if (this.attrs[key] != this.type.attrs[key].default) {
+        attrs[key] = this.attrs
+        modified = true
+      }
+    }
+    if (modified) {
+      obj.attrs = attrs
     }
     if (this.content.size)
       obj.content = this.content.toJSON()
